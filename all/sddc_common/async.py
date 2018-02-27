@@ -173,6 +173,76 @@ class AsyncMacro(object):
 				self.window.run_command(cmd['command'],args=args)
 
 
+class AsyncHelper(object):
+
+	def async_cmd(self, **args):
+		raise NotImplemented("This must be overridden in a subclass")
+
+	def create_thread(self, **args):
+		return threading.Thread(target=partial(self.async_cmd,**args))
+
+	def run_async(self, **args):
+		thread = self.create_thread(**args)
+		thread.start()
+		return thread
+
+	def run_async_with_status(self, msg='', **args):
+		thread = self.create_thread(**args)
+		runner = StatusWatcher(thread, msg)
+		runner.start()
+		return runner
+
+
+class AsyncRunner(object):
+
+	status_fmt = ''
+
+	def run(self,**args):
+		self.run_command(**args)
+
+	def run_command(self, state=None,**args):
+		if self.status_fmt:
+			self.run_async_with_status(
+				msg=self.status_fmt.format(args,state),
+				on_data=partial(self.on_data, state=state),
+				on_complete=partial(self.on_complete, state=state),
+				on_error=partial(self.on_error, state=state),
+				on_exception=partial(self.on_exception, state=state),
+				**args
+			)
+		else:
+			self.run_async(
+				on_data=partial(self.on_data, state=state),
+				on_complete=partial(self.on_complete, state=state),
+				on_error=partial(self.on_error, state=state),
+				on_exception=partial(self.on_exception, state=state),
+				**args
+			).start()
+
+	def handle(self,event,state,*args):
+		pass
+
+	def on_data(self,*args,state=None):
+		self.handle('data', state, *args)
+
+	def on_complete(self,*args,state=None):
+		self.handle('complete', *args)
+
+	def on_error(self,*args,state=None):
+		self.handle('error', state, *args)
+
+	def on_exception(self,*args,state=None):
+		self.handle('exception', state, *args)
+
+
+class AsyncMacroRunner(AsyncRunner, AsyncHelper):
+
+	def on_complete(self, *args, state=None):
+		if state:
+			update_state(state, args)
+			self.window.run_command(state['macro'],args={"state":state})
+
+
 class AsyncExecCommand(AsyncMacroCmd,WindowCommand):
 
 	status_fmt = '[{1}]$ {0}'
@@ -192,7 +262,6 @@ class SimpleArgsPrinterCommand(WindowCommand):
 
 	def run(self, **args):
 		print(args)
-		
 
 
 class TestAsyncMacroCommand(WindowCommand):
@@ -200,6 +269,6 @@ class TestAsyncMacroCommand(WindowCommand):
 	def run(self,**args):
 		print('running test')
 		self.window.run_command('async_macro',args={"cmds":[
-			{"command":"async_exec","args":{'cmd':['ls','/']}},
+			{"command":"async_exec","args":{'cmd':['dir','C:\\'] if sublime.platform()=='windows' else ['ls','/']}},
 			{"command":"simple_args_printer","args":{'cmd':'abcd'},'is_sync':True}
 		]})
