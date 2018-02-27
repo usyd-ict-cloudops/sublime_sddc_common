@@ -2,7 +2,7 @@
 import os
 import os.path as osp
 import re
-import scm
+from . import scm
 
 os.chdir(osp.expanduser('~/Projects/puppet'))
 dfn = osp.abspath('data/applications/subltest/README.md')
