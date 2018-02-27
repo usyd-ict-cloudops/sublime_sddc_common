@@ -1,5 +1,7 @@
 # SDDC Common Dependencies module for Sublime Text
 
+![Version 0.1.0](https://img.shields.io/badge/version-v0.1.0-blue.svg)
+
 ## How to use *sddc_common* as a dependency
 
 In order to tell Package Control that you are using the *sddc_common* module
