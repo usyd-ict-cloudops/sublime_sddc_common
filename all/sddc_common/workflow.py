@@ -4,10 +4,6 @@ import os.path as osp
 import re
 from . import scm
 
-os.chdir(osp.expanduser('~/Projects/puppet'))
-dfn = osp.abspath('data/applications/subltest/README.md')
-mfn = osp.abspath('modules/subltest_module/README.md')
-
 class WorkflowError(Exception):
     """Base Workflow Error"""
 
@@ -86,46 +82,6 @@ github_path_to_slug_map = {
     '^global/wiki/modules/(?P<name>\w+)$': 'puppet-{0[name]}.wiki'
 }
 
-# bitbucket_path_to_slug_map = {
-#     '^applications/(?P<name>\w+)/data$': 'hiera-applications-{0[name]}',
-#     '^applications/(?P<prefix>\w+)/modules/(?P<name>\w+)$': 'puppet-{0[name]}',
-#     '^applications/(?P<name>\w+)/wiki/data$': 'hiera-applications-{0[name]}/wiki',
-#     '^applications/(?P<prefix>\w+)/wiki/modules/(?P<name>\w+)$': 'puppet-{0[name]}/wiki',
-#     '^global/data/(?P<name>\w+)$': 'hiera-{0[name]}',
-#     '^global/modules/(?P<name>\w+)$': 'puppet-{0[name]}',
-#     '^global/wiki/data/(?P<name>\w+)$': 'hiera-{0[name]}/wiki',
-#     '^global/wiki/modules/(?P<name>\w+)$': 'puppet-{0[name]}/wiki'
-# }
-
-# github_path_to_slug_map = {
-#     '^applications/(?P<name>\w+)/data$': 'hiera-applications-{0[name]}',
-#     '^applications/(?P<prefix>\w+)/modules/(?P<name>\w+)$': 'puppet-{0[name]}',
-#     '^applications/(?P<name>\w+)/wiki/data$': 'hiera-applications-{0[name]}.wiki',
-#     '^applications/(?P<prefix>\w+)/wiki/modules/(?P<name>\w+)$': 'puppet-{0[name]}.wiki',
-#     '^global/data/(?P<name>\w+)$': 'hiera-{0[name]}',
-#     '^global/modules/(?P<name>\w+)$': 'puppet-{0[name]}',
-#     '^global/wiki/data/(?P<name>\w+)$': 'hiera-{0[name]}.wiki',
-#     '^global/wiki/modules/(?P<name>\w+)$': 'puppet-{0[name]}.wiki'
-# }
-
-# bitbucket_path_to_slug_map = {
-#     '^data/applications/(?P<name>\w+)$': 'hiera-applications-{0[name]}',
-#     '^data/(?P<name>\w+)$': 'hiera-{0[name]}',
-#     '^modules/(?P<name>\w+)$': 'puppet-{0[name]}',
-#     '^wiki/data/applications/(?P<name>\w+)$': 'hiera-applications-{0[name]}/wiki',
-#     '^wiki/data/(?P<name>\w+)$': 'hiera-{0[name]}/wiki',
-#     '^wiki/modules/(?P<name>\w+)$': 'puppet-{0[name]}/wiki'
-# }
-
-# github_path_to_slug_map = {
-#     '^data/applications/(?P<name>\w+)$': 'hiera-applications-{0[name]}',
-#     '^data/(?P<name>\w+)$': 'hiera-{0[name]}',
-#     '^modules/(?P<name>\w+)$': 'puppet-{0[name]}',
-#     '^wiki/data/applications/(?P<name>\w+)$': 'hiera-applications-{0[name]}.wiki',
-#     '^wiki/data/(?P<name>\w+)$': 'hiera-{0[name]}.wiki',
-#     '^wiki/modules/(?P<name>\w+)$': 'puppet-{0[name]}.wiki'
-# }
-
 default_path_to_slug_map = bitbucket_path_to_slug_map
 
 default_url_fmt = 'git@{provider}:{acct}/{name}.git'
@@ -161,7 +117,7 @@ def path_to_repo_name(path, project_root=None, rewrite_map=None):
         raise BadURLMap("Cannot map path {0} to repo name".format(path))
 
     try:
-        return rewrite_map[mapkey].format(re.match(mapkey,path))
+        return rewrite_map[mapkey].format(re.match(mapkey,path).groupdict())
     except (IndexError,AttributeError) as e:
         raise BadURLMap("regex '{0}' does not map to format string '{1}' for path {2}: {3}".format(mapkey,rewrite_map[mapkey],path,e))
 
