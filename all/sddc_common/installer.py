@@ -1,13 +1,15 @@
 
 import os
 import os.path as osp
+import sublime
 from sublime_plugin import WindowCommand
 
 
 def package_installed(name):
     pf = os.extsep.join([name,'sublime-package'])
     pfp = osp.join(sublime.installed_packages_path(),pf)
-    return osp.exists(pfp)
+    pdp = osp.join(sublime.packages_path(),name)
+    return osp.exists(pfp) or osp.exists(pdp)
 
 
 class SmartInstallCommand(WindowCommand):
@@ -18,4 +20,4 @@ class SmartInstallCommand(WindowCommand):
 		return name.split(',')[0]
 
 	def is_enabled(self, name):
-		return package_installed(name.split(',')[0])
+		return not package_installed(name.split(',')[0])
