@@ -1,0 +1,23 @@
+[
+    {
+        "caption": "SDDC",
+        "id": "sddc",
+        "children": [
+            {
+                "caption": "Useful Packages",
+                "id": "sddc-useful-packages",
+                "children": [
+                    {"command": "smart_install", "args": {"name": "Sublime Tutor"}},
+                    {"command": "smart_install", "args": {"name": "AdvancedNewFile"}},
+                    {"command": "smart_install", "args": {"name": "SideBarEnhancements"}},
+                    {"command": "smart_install", "args": {"name": "Anaconda"}},
+                    {"command": "smart_install", "args": {"name": "SublimeLinter"}},
+                    {"command": "smart_install", "args": {"name": "Pretty YAML"}},
+                    {"command": "smart_install", "args": {"name": "GitGutter"}},
+                    {"command": "smart_install", "args": {"name": "SublimeGit"}},
+                    {"command": "smart_install", "args": {"name": "Sublimerge"}}
+                ]
+            }
+        ]
+    }
+]
