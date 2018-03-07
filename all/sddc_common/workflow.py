@@ -84,7 +84,15 @@ github_path_to_slug_map = {
 
 default_path_to_slug_map = bitbucket_path_to_slug_map
 
-default_url_fmt = 'git@{provider}:{acct}/{name}.git'
+default_url_fmt = 'git@{provider}:{account}/{name}'
+
+
+def get_config():
+    return scm.get_git_config()
+
+
+def set_config(name, email):
+    scm.set_git_config(name, email)
 
 
 def switch_to(repo, branch):
@@ -122,7 +130,7 @@ def path_to_repo_name(path, project_root=None, rewrite_map=None):
         raise BadURLMap("regex '{0}' does not map to format string '{1}' for path {2}: {3}".format(mapkey,rewrite_map[mapkey],path,e))
 
 
-def path_to_repo_url(path, acct, project_root=None, rewrite_map=None, provider=None, url_fmt=None):
+def path_to_repo_url(path, account, project_root=None, rewrite_map=None, provider=None, url_fmt=None):
 
     fmt = default_url_fmt if url_fmt is None else url_fmt
 
@@ -138,10 +146,10 @@ def path_to_repo_url(path, acct, project_root=None, rewrite_map=None, provider=N
 
     name = path_to_repo_name(path, project_root, rewrite_map)
 
-    return fmt.format(provider=provider, acct=acct, name=name)
+    return fmt.format(provider=provider, account=account, name=name)
 
 
-def work_on(path, branch=None, acct=None, project_root=None, rewrite_map=None, provider=None, url_fmt=None, off_branch=None):
+def work_on(path, branch=None, account=None, project_root=None, rewrite_map=None, provider=None, url_fmt=None, off_branch=None):
     """Switch or Sprout or Clone"""
 
     if project_root is None:
@@ -159,7 +167,7 @@ def work_on(path, branch=None, acct=None, project_root=None, rewrite_map=None, p
     repo = scm.Repo(path) if osp.exists(path) else None
 
     if repo is None:
-        repourl = path_to_repo_url(path, acct, project_root, rewrite_map, provider, url_fmt)
+        repourl = path_to_repo_url(path, account, project_root, rewrite_map, provider, url_fmt)
         repo = scm.clone_from(repourl, path)
 
     # if repo.working_tree_dir == path:
