@@ -24,9 +24,7 @@ del_remote = lambda n:n.split('/',1)[-1]
 class SCMFailure(Exception):
     """docstring for SCMFailure"""
     def __init__(self, msg, log=None):
-        super(SCMFailure, self).__init__("{0}: {1}".format(msg,log))
-        self.msg = msg
-        self.log = log
+        super(SCMFailure, self).__init__("{0}\n{1}".format(msg,log) if log else msg)
 
 class MergeFailure(SCMFailure):
     """Merge Failure has occurred"""
@@ -39,6 +37,9 @@ class FetchFailure(RemoteFailure):
 
 class PushFailure(RemoteFailure):
     """Push Failure has occurred"""
+
+class CloneFailure(RemoteFailure):
+    """Clone Failure has occurred"""
 
 
 def handle_abort(aborted, type=None):
@@ -68,6 +69,31 @@ def abort(message, log=None, type=None):
     abort_handler(a, type=type)
 
 
+def get_git_config():
+    try:
+        if repo:
+            cfg = repo.config_reader()
+        else:
+            cfg = git.GitConfigParser([os.path.normpath(os.path.expanduser("~/.gitconfig"))], read_only=True)
+        try:
+            name = cfg.get_value('user','name')
+        except:
+            name = None
+        try:
+            email = cfg.get_value('user','email')
+        except:
+            email = None
+        return name, email
+    except:
+        return None
+
+
+def set_git_config(name,email):
+    cfg = git.GitConfigParser([os.path.normpath(os.path.expanduser("~/.gitconfig"))], read_only=False)
+    cfg.set_value('user','name',name)
+    cfg.set_value('user','email',email)
+
+
 def repo_check(repo, require_remote=False):
     if repo is None:
         raise TypeError('Not a git repository.')
@@ -89,7 +115,10 @@ def get_current_branch_name(repo):
 
 
 def clone_from(repourl, targetdir):
-    return _repo.clone_from(repourl, targetdir)
+    try:
+        return _repo.clone_from(repourl, targetdir)
+    except (GitCommandError,) as e:
+        raise CloneFailure('Cloning {0} failed'.format(repourl),e)
 
 
 def Repo(path):
