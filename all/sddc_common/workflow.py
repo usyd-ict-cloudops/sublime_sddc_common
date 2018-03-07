@@ -87,8 +87,12 @@ default_path_to_slug_map = bitbucket_path_to_slug_map
 default_url_fmt = 'git@{provider}:{account}/{name}'
 
 
-def get_config(repo=None):
-    return scm.get_git_config(repo)
+def get_config():
+    return scm.get_git_config()
+
+
+def set_config(name, email):
+    scm.set_git_config(name, email)
 
 
 def switch_to(repo, branch):
