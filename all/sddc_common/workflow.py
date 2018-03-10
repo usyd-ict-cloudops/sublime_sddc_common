@@ -255,7 +255,7 @@ def deploy_for(repo, message, *files, all_files=True, untracked_files=True, bran
             return BranchMissing(branch)
         switch_to(repo, branch)
 
-    scm.smart_pull(repo)
+    sync_for(repo)
 
     if scm.commit(repo, message, *files, all_files=all_files, untracked_files=untracked_files):
         scm.push(repo, branch)
