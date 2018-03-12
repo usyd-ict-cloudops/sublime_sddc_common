@@ -1,4 +1,5 @@
 from . import scm, workflow
+from functools import partial
 from sublime_plugin import WindowCommand
 
 
