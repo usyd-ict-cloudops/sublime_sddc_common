@@ -42,26 +42,3 @@ class AsyncGitAddCommitPush(AsyncMacro,WindowCommand):
 			cmds.append({"command":"async_git","args":{'cmd':['push','-c','push.default=upstream','origin']}})
 			state = self.make_state('async_git_add_commit_push', cmds , {"repo":repo})
 		self.run_macro(state)
-
-
-class AsyncGitSwitch(AsyncMacro,WindowCommand):
-	def run(self, branch=None, repo=None, include_untracked=False, state=None):
-		if state is None:
-			if branch is None:
-				return
-			if repo is None:
-				return
-			cmds = []
-			if include_untracked:
-				cmds.append({"command":"async_git","args":{'cmd':['add','.']}})
-			else:
-				flags = '-am'
-			else:
-				fn = self.window.active_view().file_name()
-				if not fn:
-					return
-				cmds.append({"command":"async_git","args":{'cmd':['add',fn]}})
-			cmds.append({"command":"async_git","args":{'cmd':['commit',flags,msg]}})
-			cmds.append({"command":"async_git","args":{'cmd':['push','-c','push.default=upstream','origin']}})
-			state = self.make_state('async_git_add_commit_push', cmds , {"repo":repo})
-		self.run_macro(state)
