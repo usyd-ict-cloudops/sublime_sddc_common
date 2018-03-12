@@ -1,6 +1,6 @@
 # SDDC Common Dependencies module for Sublime Text
 
-![Version 0.3.2](https://img.shields.io/badge/version-v0.3.2-blue.svg)
+![Version 0.3.4](https://img.shields.io/badge/version-v0.3.4-blue.svg)
 
 ## How to use *sddc_common* as a dependency
 
