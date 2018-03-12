@@ -11,7 +11,7 @@ from git.exc import GitCommandError,  InvalidGitRepositoryError
 
 forbidden_branches = ['HEAD',]
 
-STASH_TEMPLATE = 'SDDC: stashing before {0}.'
+STASH_TEMPLATE = 'Legit: stashing before {0}.'
 
 git = os.environ.get("GIT_PYTHON_GIT_EXECUTABLE", 'git')
 
@@ -180,6 +180,49 @@ def get_branch(repo, branch=None, local=True, remote=True, excl=forbidden_branch
     branch = branch_name(repo) if branch is None else branch
 
     return {b.name:b for b in branches(repo, local=local, remote=remote, excl=excl)}.get(branch)
+
+
+def get_branch_state(b):
+    return 'tracked' if b.is_published and b.is_local else 'local' if b.is_local else 'remote'
+
+
+def get_branch_items(branches,branch=None):
+    """Get quick panel items from a list of branches"""
+    return [[['  ','* '][branch==b.name]+b.name,'  '+get_branch_state(b)] for b in branches]
+
+
+class RepoHelper(object):
+
+    @property
+    def repo(self):
+        """discover the repo for a sublime command"""
+
+        if hasattr(self, 'view'):
+            window = self.view.window()
+            view = self.view
+        elif hasattr(self, 'window'):
+            window = self.window
+            view = self.window.active_view()
+        else:
+            return
+
+        folders = []
+
+        view_repo = view.settings().get('git_repo')
+        if view_repo:
+            folders.append(view_repo)
+
+        cur_file = view.file_name()
+        if cur_file:
+            folders.append(osp.dirname(cur_file))
+        
+        folders.extend(window.folders())
+
+        for folder in folders:
+            if osp.exists(folder):
+                repo = scm.Repo(folder)
+                if repo:
+                    return repo
 
 
 # def get_branches(repo, local=True, remote_branches=True):
