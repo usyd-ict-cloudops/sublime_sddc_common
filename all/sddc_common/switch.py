@@ -1,5 +1,6 @@
 import os.path as osp
 from .workflow import scm, switch_to
+from sublime_plugin import WindowCommand
 
 
 class GitSwitchCommand(scm.RepoHelper, WindowCommand):
