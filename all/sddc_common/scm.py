@@ -217,7 +217,7 @@ class RepoHelper(object):
 
         for folder in folders:
             if os.path.exists(folder):
-                repo = scm.Repo(folder)
+                repo = Repo(folder)
                 if repo:
                     return repo
 
