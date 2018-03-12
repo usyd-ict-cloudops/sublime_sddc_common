@@ -1,8 +1,6 @@
 from __future__ import absolute_import
 import os
-# import re
-# import sys
-# import subprocess
+import os.path as osp
 from collections import namedtuple
 from operator import attrgetter
 
@@ -74,7 +72,7 @@ def get_git_config():
         if repo:
             cfg = repo.config_reader()
         else:
-            cfg = git.GitConfigParser([os.path.normpath(os.path.expanduser("~/.gitconfig"))], read_only=True)
+            cfg = git.GitConfigParser([osp.normpath(osp.expanduser("~/.gitconfig"))], read_only=True)
         try:
             name = cfg.get_value('user','name')
         except:
@@ -89,7 +87,7 @@ def get_git_config():
 
 
 def set_git_config(name,email):
-    cfg = git.GitConfigParser([os.path.normpath(os.path.expanduser("~/.gitconfig"))], read_only=False)
+    cfg = git.GitConfigParser([osp.normpath(osp.expanduser("~/.gitconfig"))], read_only=False)
     cfg.set_value('user','name',name)
     cfg.set_value('user','email',email)
 
