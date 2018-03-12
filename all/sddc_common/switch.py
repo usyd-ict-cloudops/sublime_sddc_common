@@ -30,7 +30,7 @@ class GitSwitchCommand(scm.RepoHelper, WindowCommand):
 
         branches = sorted(scm.branches(repo),key=lambda b:(1-b.is_local,b.is_published,b.name))
 
-        if 0 < idx < len(branches):
+        if 0 <= idx < len(branches):
             branch = branches[idx]
             if branch.name != repo.head.ref.name:
                 switch_to(repo, branch.name)
