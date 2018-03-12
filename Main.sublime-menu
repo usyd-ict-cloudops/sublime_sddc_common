@@ -3,6 +3,9 @@
         "caption": "SDDC",
         "id": "sddc",
         "children": [
+            {"caption": "-", "id": "sddc-git"},
+            {"command": "git_switch", "caption": "Switch Branch"},
+            {"caption": "-", "id": "sddc-packages"},
             {
                 "caption": "Useful Packages",
                 "id": "sddc-useful-packages",
