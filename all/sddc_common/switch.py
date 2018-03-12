@@ -1,8 +1,8 @@
-from .workflow import scm, switch_to
+from . import scm, workflow
 from sublime_plugin import WindowCommand
 
 
-class GitSwitchCommand(scm.RepoHelper, WindowCommand):
+class SwitchBranchCommand(scm.RepoHelper, WindowCommand):
 
     def run(self, branch=None):
         repo = self.repo
@@ -14,7 +14,7 @@ class GitSwitchCommand(scm.RepoHelper, WindowCommand):
         branches = sorted(scm.branches(repo),key=lambda b:(1-b.is_local,b.is_published,b.name))
 
         if branch and any(b.name==branch for b in branches if b.name!=repo.head.ref.name):
-            switch_to(repo, branch)
+            workflow.switch_to(repo, branch)
         elif branch is None:
             items = scm.get_branch_items(branches,repo.head.ref.name)
             func = partial(self.on_select,repo_path=repo_path)
@@ -33,4 +33,4 @@ class GitSwitchCommand(scm.RepoHelper, WindowCommand):
         if 0 <= idx < len(branches):
             branch = branches[idx]
             if branch.name != repo.head.ref.name:
-                switch_to(repo, branch.name)
+                workflow.switch_to(repo, branch.name)
