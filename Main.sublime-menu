@@ -4,7 +4,7 @@
         "id": "sddc",
         "children": [
             {"caption": "-", "id": "sddc-git"},
-            {"command": "git_switch", "caption": "Switch Branch"},
+            {"command": "switch_branch"},
             {"caption": "-", "id": "sddc-packages"},
             {
                 "caption": "Useful Packages",
