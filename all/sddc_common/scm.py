@@ -156,9 +156,9 @@ def branch_name(repo):
 def branches(repo, local=True, remote=True, excl=forbidden_branches):
     """Returns a list of local and remote branches."""
 
-    repo_check(repo, require_remote=remote)
-    
-    r = [n for n in map(del_remote,map(gname,repo.remote().refs)) if n not in excl] if remote else []
+    repo_check(repo)
+
+    r = [n for n in map(del_remote,map(gname,repo.remote().refs)) if n not in excl] if remote and repo.remotes else []
 
     l = [n for n in map(gname,repo.heads) if n not in excl] if local else []
 
