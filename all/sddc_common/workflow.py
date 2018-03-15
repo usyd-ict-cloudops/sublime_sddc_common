@@ -99,6 +99,13 @@ def switch_to(repo, branch):
     # switch_to(repo,'develop')
     if repo.is_dirty():
         scm.stash_it(repo)
+    if branch not in repo.heads:
+        if branch in repo.remote().refs:
+            # Track
+            scm.track_branch(repo, branch)
+        else:
+            # Sprout
+            scm.sprout_branch(repo, branch, off_branch)
     scm.checkout_branch(repo, branch)
     if scm.unstash_index(repo):
         scm.unstash_it(repo)
