@@ -294,6 +294,9 @@ def finalize_for(repo, branch, force=False):
     if unstash_index and not force:
         raise DirtyBranch(branch)
     if not scm.merged(repo, branch):
+        if not force:
+            # Require an unmerged branch to be force finalized to avoid mistakes
+            return
         original_branch = scm.branch_name(repo)
         if original_branch!='master':
             switch_to(repo, 'master')
