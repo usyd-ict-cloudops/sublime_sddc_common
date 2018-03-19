@@ -23,6 +23,7 @@ frontmatter = {
         "pymdownx.extrarawhtml",
         "pymdownx.keys",
         "pymdownx.b64",
+        "pymdownx.highlight",
         {"pymdownx.escapeall": {"hardbreak": True, "nbsp": True}},
         # Sublime doesn't support superscript, so no ordinal numbers
         {"pymdownx.smartsymbols": {"ordinal_numbers": False}}
