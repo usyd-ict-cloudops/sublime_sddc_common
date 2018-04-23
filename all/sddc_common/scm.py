@@ -393,8 +393,12 @@ def commit(repo, message, *files, all_files=True, untracked_files=True):
             return
 
     # Check that something is to be committed
-    if not repo.index.diff("HEAD"):
-        return
+    if repo.head.is_valid()
+        if not repo.index.diff("HEAD"):
+            return
+    else:
+        if not list(repo.index.iter_blobs()):
+            return
 
     return repo.index.commit(message)
 

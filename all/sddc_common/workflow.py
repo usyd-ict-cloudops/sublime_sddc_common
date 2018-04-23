@@ -249,7 +249,7 @@ def sync_for(repo, branch=None):
     else:
         raise BranchMissing('The {0} branch does not exist')
 
-
+        
 def deploy_for(repo, message, *files, all_files=True, untracked_files=True, branch=None, switch_back=True):
     """Switch, Sync, Add, Commit, Push"""
 
