@@ -246,7 +246,7 @@ def sync_for(repo, branch=None):
         if is_external:
             switch_to(repo, original_branch)
 
-    else:
+    elif not scm.is_empty(repo):
         raise BranchMissing('The {0} branch does not exist')
 
         
@@ -255,11 +255,11 @@ def deploy_for(repo, message, *files, all_files=True, untracked_files=True, bran
 
     original_branch = scm.branch_name(repo)
 
-    if branch is None:
+    if branch is None or scm.is_empty(repo):
         branch = original_branch
     elif branch != original_branch:
         if branch not in scm.branch_names(repo):
-            return BranchMissing(branch)
+            raise BranchMissing(branch)
         switch_to(repo, branch)
 
     sync_for(repo)

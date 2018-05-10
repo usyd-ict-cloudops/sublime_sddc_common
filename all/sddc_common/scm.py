@@ -316,6 +316,14 @@ def fetch(repo):
     return repo.git.fetch('origin')
 
 
+def is_empty(repo):
+    """Check to see if a repo is empty"""
+    
+    repo_check(repo)
+
+    return not (repo.head.is_valid() or any(repo.index.iter_blobs()))
+
+
 def is_upstream_ahead(repo,branch=None):
 
     repo_check(repo, require_remote=True)
