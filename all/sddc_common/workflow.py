@@ -250,7 +250,7 @@ def sync_for(repo, branch=None):
         raise BranchMissing('The {0} branch does not exist')
 
         
-def deploy_for(repo, message, *files, all_files=True, untracked_files=True, branch=None, switch_back=True):
+def deploy_for(repo, message, *files, all_files=True, untracked_files=True, branch=None, switch_back=True, sync=True):
     """Switch, Sync, Add, Commit, Push"""
 
     original_branch = scm.branch_name(repo)
@@ -262,7 +262,8 @@ def deploy_for(repo, message, *files, all_files=True, untracked_files=True, bran
             raise BranchMissing(branch)
         switch_to(repo, branch)
 
-    sync_for(repo)
+    if sync:
+        sync_for(repo)
 
     if scm.commit(repo, message, *files, all_files=all_files, untracked_files=untracked_files):
         scm.push(repo, branch)
