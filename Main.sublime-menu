@@ -3,8 +3,6 @@
         "caption": "SDDC",
         "id": "sddc",
         "children": [
-            {"caption": "-", "id": "sddc-git"},
-            {"command": "switch_branch"},
             {"caption": "-", "id": "sddc-packages"},
             {
                 "caption": "Useful Packages",
@@ -20,7 +18,9 @@
                     {"command": "smart_install", "args": {"name": "SublimeGit"}},
                     {"command": "smart_install", "args": {"name": "Sublimerge"}}
                 ]
-            }
+            },
+            {"caption": "-", "id": "sddc-git"},
+            {"command": "switch_branch"}
         ]
     }
 ]
