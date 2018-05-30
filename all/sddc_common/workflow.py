@@ -301,7 +301,7 @@ def finalize_for(repo, branch, force=False):
         original_branch = scm.branch_name(repo)
         if original_branch!='master':
             switch_to(repo, 'master')
-        repo.git.merge(branch,s='ours')
+        repo.git.merge(no_ff=branch,s='ours')
         if original_branch!=scm.branch_name(repo):
             switch_to(repo, original_branch)
     scm.destroy_branch(repo, branch)
