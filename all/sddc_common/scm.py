@@ -360,10 +360,16 @@ def smart_merge(repo, branch, allow_rebase=True, force_theirs=None):
         if verb == 'merge' and force_theirs is not None:
             if force_theirs:
                 # Overwrite our conflicting differences with theirs
+                if not allow_rebase:
+                    return repo.git.merge(no_ff=branch,X='theirs')
                 return getattr(repo.git, verb)(branch,X='theirs')
             else:
                 # Discard their conflicting changes being merged in
+                if not allow_rebase:
+                    return repo.git.merge(no_ff=branch,X='ours')
                 return getattr(repo.git, verb)(branch,X='ours')
+        elif not allow_rebase:
+            return repo.git.merge(no_ff=branch)
         else:
             # Merge and abort if there are conflicts
             return getattr(repo.git, verb)(branch)
