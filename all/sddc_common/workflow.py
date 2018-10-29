@@ -53,33 +53,33 @@ class DirtyBranch(BadBranch):
 
 
 bitbucket_path_to_slug_map = {
-    '^applications/(?P<name>\w+)/data$': 'hiera-applications-{0[name]}',
-    '^applications/(?P<prefix>\w+)/modules/(?P<name>\w+)$': 'puppet-{0[name]}',
-    '^applications/(?P<name>\w+)/wiki/data$': 'hiera-applications-{0[name]}/wiki',
-    '^applications/(?P<prefix>\w+)/wiki/modules/(?P<name>\w+)$': 'puppet-{0[name]}/wiki',
-    '^tenants/(?P<name>\w+)/data$': 'hiera-tenants-{0[name]}',
-    '^tenants/(?P<prefix>\w+)/modules/(?P<name>\w+)$': 'puppet-{0[name]}',
-    '^tenants/(?P<name>\w+)/wiki/data$': 'hiera-tenants-{0[name]}/wiki',
-    '^tenants/(?P<prefix>\w+)/wiki/modules/(?P<name>\w+)$': 'puppet-{0[name]}/wiki',
-    '^global/data/(?P<name>\w+)$': 'hiera-{0[name]}',
-    '^global/modules/(?P<name>\w+)$': 'puppet-{0[name]}',
-    '^global/wiki/data/(?P<name>\w+)$': 'hiera-{0[name]}/wiki',
-    '^global/wiki/modules/(?P<name>\w+)$': 'puppet-{0[name]}/wiki'
+    '^applications/(?P<name>\\w+)/data$': 'hiera-applications-{0[name]}',
+    '^applications/(?P<prefix>\\w+)/modules/(?P<name>\\w+)$': 'puppet-{0[name]}',
+    '^applications/(?P<name>\\w+)/wiki/data$': 'hiera-applications-{0[name]}/wiki',
+    '^applications/(?P<prefix>\\w+)/wiki/modules/(?P<name>\\w+)$': 'puppet-{0[name]}/wiki',
+    '^tenants/(?P<name>\\w+)/data$': 'hiera-tenants-{0[name]}',
+    '^tenants/(?P<prefix>\\w+)/modules/(?P<name>\\w+)$': 'puppet-{0[name]}',
+    '^tenants/(?P<name>\\w+)/wiki/data$': 'hiera-tenants-{0[name]}/wiki',
+    '^tenants/(?P<prefix>\\w+)/wiki/modules/(?P<name>\\w+)$': 'puppet-{0[name]}/wiki',
+    '^global/data/(?P<name>\\w+)$': 'hiera-{0[name]}',
+    '^global/modules/(?P<name>\\w+)$': 'puppet-{0[name]}',
+    '^global/wiki/data/(?P<name>\\w+)$': 'hiera-{0[name]}/wiki',
+    '^global/wiki/modules/(?P<name>\\w+)$': 'puppet-{0[name]}/wiki'
 }
 
 github_path_to_slug_map = {
-    '^applications/(?P<name>\w+)/data$': 'hiera-applications-{0[name]}',
-    '^applications/(?P<prefix>\w+)/modules/(?P<name>\w+)$': 'puppet-{0[name]}',
-    '^applications/(?P<name>\w+)/wiki/data$': 'hiera-applications-{0[name]}.wiki',
-    '^applications/(?P<prefix>\w+)/wiki/modules/(?P<name>\w+)$': 'puppet-{0[name]}.wiki',
-    '^tenants/(?P<name>\w+)/data$': 'hiera-tenants-{0[name]}',
-    '^tenants/(?P<prefix>\w+)/modules/(?P<name>\w+)$': 'puppet-{0[name]}',
-    '^tenants/(?P<name>\w+)/wiki/data$': 'hiera-tenants-{0[name]}.wiki',
-    '^tenants/(?P<prefix>\w+)/wiki/modules/(?P<name>\w+)$': 'puppet-{0[name]}.wiki',
-    '^global/data/(?P<name>\w+)$': 'hiera-{0[name]}',
-    '^global/modules/(?P<name>\w+)$': 'puppet-{0[name]}',
-    '^global/wiki/data/(?P<name>\w+)$': 'hiera-{0[name]}.wiki',
-    '^global/wiki/modules/(?P<name>\w+)$': 'puppet-{0[name]}.wiki'
+    '^applications/(?P<name>\\w+)/data$': 'hiera-applications-{0[name]}',
+    '^applications/(?P<prefix>\\w+)/modules/(?P<name>\\w+)$': 'puppet-{0[name]}',
+    '^applications/(?P<name>\\w+)/wiki/data$': 'hiera-applications-{0[name]}.wiki',
+    '^applications/(?P<prefix>\\w+)/wiki/modules/(?P<name>\\w+)$': 'puppet-{0[name]}.wiki',
+    '^tenants/(?P<name>\\w+)/data$': 'hiera-tenants-{0[name]}',
+    '^tenants/(?P<prefix>\\w+)/modules/(?P<name>\\w+)$': 'puppet-{0[name]}',
+    '^tenants/(?P<name>\\w+)/wiki/data$': 'hiera-tenants-{0[name]}.wiki',
+    '^tenants/(?P<prefix>\\w+)/wiki/modules/(?P<name>\\w+)$': 'puppet-{0[name]}.wiki',
+    '^global/data/(?P<name>\\w+)$': 'hiera-{0[name]}',
+    '^global/modules/(?P<name>\\w+)$': 'puppet-{0[name]}',
+    '^global/wiki/data/(?P<name>\\w+)$': 'hiera-{0[name]}.wiki',
+    '^global/wiki/modules/(?P<name>\\w+)$': 'puppet-{0[name]}.wiki'
 }
 
 default_path_to_slug_map = bitbucket_path_to_slug_map
@@ -125,6 +125,9 @@ def path_to_repo_name(path, project_root=None, rewrite_map=None):
     # Assume path is relative to the project_root unless it is provided
     if project_root is not None:
         path = osp.relpath(path,project_root)
+
+    # Replace windows path separators
+    path = path.replace('\\','/')
 
     try:
         mapkey = max((k for k in rewrite_map if re.match(k,path)),key=len)
